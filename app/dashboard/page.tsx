@@ -1,14 +1,17 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { supabase } from '../../lib/supabase'
+import { supabase } from '../../../lib/supabase'
 import { useRouter } from 'next/navigation'
 
 export default function Dashboard() {
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const [mounted, setMounted] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
+    setMounted(true)
+    
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) {
@@ -18,15 +21,18 @@ export default function Dashboard() {
       setUser(user)
       setLoading(false)
     }
-    getUser()
-  }, [router])
+    
+    if (mounted) {
+      getUser()
+    }
+  }, [router, mounted])
 
   const signOut = async () => {
     await supabase.auth.signOut()
     router.push('/login')
   }
 
-  if (loading) {
+  if (!mounted || loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
         <div className="text-gray-600">Loading...</div>
