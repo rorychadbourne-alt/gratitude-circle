@@ -4,7 +4,7 @@ import { supabase } from '../../lib/supabase'
 import { useRouter } from 'next/navigation'
 
 export default function Dashboard() {
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
 
@@ -26,7 +26,13 @@ export default function Dashboard() {
     router.push('/login')
   }
 
-  if (loading) return <div>Loading...</div>
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <div className="text-gray-600">Loading...</div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
